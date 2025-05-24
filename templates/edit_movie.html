@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+
+{% block content %}
+  <h1 class="text-center my-4">Edit Movie</h1>
+
+  {% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+  {% endif %}
+
+  <form method="POST" id="edit-movie-form">
+    <div class="mb-3">
+      <label for="title" class="form-label">Title:</label>
+      <input type="text" class="form-control" id="title" name="title" value="{{ movie.title }}" required>
+    </div>
+    <div class="mb-3">
+      <label for="year" class="form-label">Year:</label>
+      <input type="number" class="form-control" id="year" name="year" value="{{ movie.year }}" required>
+    </div>
+    <div class="mb-3">
+      <label for="director" class="form-label">Director:</label>
+      <input type="text" class="form-control" id="director" name="director" value="{{ movie.director }}" required>
+    </div>
+    <div class="mb-3">
+      <label for="length" class="form-label">Length (minutes):</label>
+      <input type="number" class="form-control" id="length" name="length" value="{{ movie.length }}" required>
+    </div>
+    <div class="mb-3">
+      <label for="image" class="form-label">Image URL:</label>
+      <input type="text" class="form-control" id="image" name="image" value="{{ movie.image }}" required>
+    </div>
+    <div class="mb-3">
+      <label for="short_description" class="form-label">Short Description:</label>
+      <input type="text" class="form-control" id="short_description" name="short_description" value="{{ movie.short_description }}" required>
+    </div>
+    <div class="mb-3">
+      <label for="description" class="form-label">Description:</label>
+      <textarea class="form-control" id="description" name="description" rows="4" required>{{ movie.description }}</textarea>
+    </div>
+    <div class="mb-3">
+      <label for="stars" class="form-label">Stars (comma separated):</label>
+      <input type="text" class="form-control" id="stars" name="stars" value="{{ movie.stars | join(', ') }}" required>
+    </div>
+    <div class="submit-btn-container">
+      <button type="submit" class="btn submit-btn">Submit</button>
+      <button type="button" id="discard-btn" class="btn submit-btn">Discard Changes</button>
+    </div>
+  </form>
+
+  <script>
+    // Attach an event listener for the "Discard Changes" button
+    document.getElementById('discard-btn').addEventListener('click', function(){
+      if (confirm("Are you sure you want to discard your changes?")) {
+          // Redirect to the view page without saving changes
+          window.location.href = "/view/{{ movie.id }}";
+      }
+    });
+  </script>
+{% endblock %}

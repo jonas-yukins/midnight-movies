@@ -1,0 +1,124 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1 class="text-center my-4">Add a New Movie</h1>
+
+<!-- Success Message -->
+<div id="success-message" class="alert alert-success" style="display:none;">
+    New item successfully created. <a href="#" id="see-item-link">See it here</a>
+</div>
+
+<form id="add-movie-form" novalidate>
+    <div class="mb-3">
+        <label for="title" class="form-label">Title:</label>
+        <input type="text" class="form-control" id="title" required>
+        <div class="invalid-feedback" id="error-title"></div>
+    </div>
+    <div class="mb-3">
+        <label for="year" class="form-label">Year:</label>
+        <input type="number" class="form-control" id="year" required>
+        <div class="invalid-feedback" id="error-year"></div>
+    </div>
+    <div class="mb-3">
+        <label for="director" class="form-label">Director:</label>
+        <input type="text" class="form-control" id="director" required>
+        <div class="invalid-feedback" id="error-director"></div>
+    </div>
+    <div class="mb-3">
+        <label for="length" class="form-label">Length (minutes):</label>
+        <input type="number" class="form-control" id="length" required>
+        <div class="invalid-feedback" id="error-length"></div>
+    </div>
+    <div class="mb-3">
+        <label for="image" class="form-label">Image URL:</label>
+        <input type="text" class="form-control" id="image" required>
+        <div class="invalid-feedback" id="error-image"></div>
+    </div>
+    <div class="mb-3">
+        <label for="short_description" class="form-label">Short Description:</label>
+        <input type="text" class="form-control" id="short_description" required>
+        <div class="invalid-feedback" id="error-short_description"></div>
+    </div>
+    <div class="mb-3">
+        <label for="description" class="form-label">Description:</label>
+        <textarea class="form-control" id="description" rows="4" required></textarea>
+        <div class="invalid-feedback" id="error-description"></div>
+    </div>
+    <div class="mb-3">
+        <label for="stars" class="form-label">Stars (comma separated):</label>
+        <input type="text" class="form-control" id="stars" required>
+        <div class="invalid-feedback" id="error-stars"></div>
+    </div>
+    <div class="submit-btn-container">
+        <button type="submit" class="btn submit-btn">Add Movie</button>
+    </div>
+</form>
+
+<script>
+document.getElementById('add-movie-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    // Clear any previous error messages
+    const fields = ['title', 'year', 'director', 'length', 'image', 'short_description', 'description', 'stars'];
+    fields.forEach(field => {
+        document.getElementById('error-' + field).innerText = '';
+        document.getElementById(field).classList.remove('is-invalid');
+    });
+    
+    // Gather data from the form
+    const data = {
+        title: document.getElementById('title').value.trim(),
+        year: document.getElementById('year').value.trim(),
+        director: document.getElementById('director').value.trim(),
+        length: document.getElementById('length').value.trim(),
+        image: document.getElementById('image').value.trim(),
+        short_description: document.getElementById('short_description').value.trim(),
+        description: document.getElementById('description').value.trim(),
+        stars: document.getElementById('stars').value.trim()
+    };
+    
+    // Basic client-side validation
+    let hasError = false;
+    for (const [key, value] of Object.entries(data)) {
+        if (!value) {
+            document.getElementById('error-' + key).innerText = key.charAt(0).toUpperCase() + key.slice(1) + " is required.";
+            document.getElementById(key).classList.add('is-invalid');
+            hasError = true;
+        }
+    }
+    if (hasError) return;
+    
+    try {
+        const response = await fetch('/add_movie', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        const result = await response.json();
+        if (response.ok) {
+            // Show success message with link to view the new movie
+            const successMessage = document.getElementById('success-message');
+            const seeItemLink = document.getElementById('see-item-link');
+            seeItemLink.href = result.movie_url;
+            successMessage.style.display = 'block';
+            
+            // Reset the form and focus on the title field for a new entry
+            document.getElementById('add-movie-form').reset();
+            document.getElementById('title').focus();
+        } else {
+            // If errors returned by the server, display them next to each field
+            if(result.error && typeof result.error === 'object'){
+                for (const [field, errorMsg] of Object.entries(result.error)) {
+                    document.getElementById('error-' + field).innerText = errorMsg;
+                    document.getElementById(field).classList.add('is-invalid');
+                }
+            } else {
+                alert("Error: " + result.error);
+            }
+        }
+    } catch (error) {
+        console.error("Error submitting movie:", error);
+    }
+});
+</script>
+{% endblock %}

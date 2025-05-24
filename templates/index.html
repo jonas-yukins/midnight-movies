@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="bg-image-container">
+    <img src="static/images/night_city.jpg" alt="A city skyline at night with lights glowing" class="bg-image-alt">
+    <div class="title-container">
+        <h1 class="site-title">Midnight Movies</h1>
+    </div>
+    <div class="search-bar-container">
+        <form class="d-flex navbar-form" action="/search" method="GET" onsubmit="return validateSearch(event)">
+            <input class="form-control me-2" type="search" name="query" id="search-input-main" placeholder="Search for a movie, actor, director..." aria-label="Search" autocomplete="off">
+            <button class="btn navbar-submit-btn" type="submit">Search</button>
+        </form>
+    </div>
+</div>
+
+<h2 class="text-center my-4">Popular This Week</h2>
+<div class="container">
+    <div class="row justify-content-center">
+        <div id="popular-movies" class="d-flex flex-wrap justify-content-center">
+            <!-- Movies will be inserted here -->
+        </div>
+    </div>
+</div>
+{% endblock %}

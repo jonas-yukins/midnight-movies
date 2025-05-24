@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1>Showing Results for "{{ query }}"</h1>
+
+<p id="results-count">
+    {{ results|length }} 
+    {% if results|length == 1 %}
+        result
+    {% else %}
+        results
+    {% endif %}
+    found.
+</p>
+
+<div class="row" id="search-results">
+    <!-- Movies will be inserted here -->
+</div>
+
+<script>
+// Convert the server-provided results to a JavaScript object
+const results = {{ results|tojson }};
+const container = document.getElementById('search-results');
+const resultsCount = document.getElementById('results-count');
+
+if (results.length > 0) {
+    let html = "";
+    results.forEach(movie => {
+        html += createMovieCard(movie);
+    });
+    container.innerHTML = html;
+} else {
+    resultsCount.textContent = "No matches found.";
+}
+</script>
+{% endblock %}

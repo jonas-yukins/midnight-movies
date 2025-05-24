@@ -1,0 +1,345 @@
+/* ======================================
+   Base Colors & Global Styles
+   ====================================== */
+   :root {
+    --dark-purple: #2c003e;
+    --accent-color: #ff44ff; /* Neon Pink */
+    --light-grey: #f8f4f4;
+    --dark-grey: #333333;
+  }
+  
+  body {
+    background-color: var(--dark-purple);
+    color: var(--light-grey);
+    font-family: Arial, sans-serif;
+    margin-top: 70px; /* Space for fixed navbar */
+  }
+  
+  h2 {
+    color: white;
+  }
+
+  /* Movie Subtext Styling */
+    .subtext,
+    .subtext p,
+    .subtext ul,
+    .subtext li {
+        color: var(--light-grey);
+    }
+
+    .slogan {
+        font-size: 0.9rem;        /* Smaller font for a subtle slogan */
+        font-style: italic;       /* Optional: italicize for emphasis */
+        color: var(--light-grey); /* Uses your light grey color */
+        margin-left: 10px;        /* Space between the brand and slogan */
+    }
+
+    .edit-link {
+        color: var(--accent-color) !important;
+    }
+  
+  /* ======================================
+     Navbar
+     ====================================== */
+  .navbar {
+    background-color: var(--dark-purple) !important;
+    padding: 10px 25px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+  }
+  .navbar .navbar-brand {
+    color: white;
+    font-size: 1.6rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+  .navbar .navbar-nav .nav-link {
+    color: var(--light-grey);
+    font-size: 1.1rem;
+    transition: color 0.3s ease;
+  }
+  .navbar .navbar-nav .nav-link:hover {
+    color: var(--accent-color);
+  }
+  .navbar .d-flex {
+    display: flex;
+    align-items: center;
+  }
+  
+  /* Navbar Search Input & Button */
+  .navbar input[type="search"] {
+    background-color: transparent;
+    border: 1px solid var(--light-grey);
+    color: var(--light-grey);
+    padding: 8px 15px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+  }
+  .navbar input[type="search"]::placeholder {
+    color: white;
+  }
+  .navbar input[type="search"]:hover {
+    transform: scale(1.05);
+  }
+  .navbar button[type="submit"] {
+    background-color: var(--accent-color);
+    color: var(--dark-purple);
+    border: none;
+    padding: 8px 15px;
+    margin-left: 10px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .navbar button[type="submit"]:hover {
+    transform: scale(1.2);
+    background-color: var(--accent-color);
+    color: var(--dark-purple);
+  }
+  
+  /* ======================================
+     Search Bar Container (Body)
+     ====================================== */
+  .search-bar-container {
+    padding: 15px;
+    border-radius: 10px;
+    width: 50%;
+    margin-top: 10px;
+    justify-content: center;
+    align-items: center;
+  }
+  .search-bar-container input[type="search"] {
+    background-color: transparent;
+    border: 1px solid var(--light-grey);
+    color: var(--light-grey);
+    padding: 8px 15px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    margin-right: 10px;
+  }
+  .search-bar-container input[type="search"]::placeholder {
+    color: white;
+  }
+  .search-bar-container input[type="search"]:hover {
+    transform: scale(1.02);
+  }
+  .search-bar-container button[type="submit"] {
+    background-color: var(--accent-color);
+    color: var(--dark-purple);
+    border: none;
+    padding: 8px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .search-bar-container button[type="submit"]:hover {
+    transform: scale(1.1);
+    background-color: var(--accent-color);
+    color: var(--dark-purple);
+  }
+  
+  /* ======================================
+     Title & Background Image Section
+     ====================================== */
+  .title-container {
+    margin-bottom: 10px;
+  }
+  .site-title {
+    color: white;
+    font-size: 3rem;
+    font-weight: bold;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
+  }
+  .bg-image-container {
+    width: 100vw;
+    height: 250px;
+    background-image: url('/static/images/night_city.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    left: 0;
+    margin: 0 calc(-50vw + 50%);
+  }
+  .bg-image-container .bg-image-alt {
+    display: none;
+  }
+  
+  /* ======================================
+     Add Movie Button
+     ====================================== */
+  .add-movie-btn {
+    font-size: 2rem;
+    color: white;
+    background-color: var(--dark-purple);
+    text-decoration: none;
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: all 0.3s ease;
+  }
+  .add-movie-btn:hover {
+    transform: scale(1.2);
+    background-color: var(--accent-color);
+    color: white;
+  }
+  .add-movie-btn:hover::after {
+    content: "Have a movie suggestion? Add it here.";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+    font-size: 0.8rem;
+    margin-top: 5px;
+    z-index: 1050;
+  }
+  
+  /* ======================================
+     Movie Cards
+     ====================================== */
+  .movie-card {
+    background-color: var(--light-grey);
+    color: var(--dark-grey);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .movie-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  }
+  .movie-card-link {
+    text-decoration: none;
+    color: inherit;
+  }
+  .movie-details-btn {
+    background-color: var(--accent-color);
+    color: var(--dark-purple);
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    width: 100%;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+  .movie-details-btn:hover {
+    transform: scale(1.05);
+    background-color: var(--accent-color);
+    color: var(--dark-purple);
+  }
+  
+  /* ======================================
+     Reviews Section
+     ====================================== */
+  #reviews-container {
+    margin-top: 20px;
+  }
+  #reviews-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 0;
+    justify-content: flex-start;
+  }
+  .list-group-item {
+    display: flex;
+    color: white;
+    align-items: center;
+    background-color: transparent;
+    border: 1px solid #555;
+    border-radius: 20px;
+    padding: 10px 15px;
+    font-size: 1rem;
+    white-space: nowrap;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+  }
+  .list-group-item strong {
+    color: var(--accent-color);
+  }
+  .list-group-item:first-child {
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+  }
+  .list-group-item:last-child {
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+  }
+  .review-stars {
+    color: #f4c542;
+    font-size: 1.2rem;
+  }
+  
+  /* Submit Rating Button */
+  #review-form button {
+    background-color: var(--accent-color);
+    color: var(--dark-purple);
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    width: 100%;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+  #review-form button:hover {
+    transform: scale(1.01);
+    background-color: var(--accent-color);
+    color: var(--dark-purple);
+  }
+  
+  /* ======================================
+     Form Input Overrides (Add & Edit)
+     ====================================== */
+  #add-movie-form .form-control,
+  #edit-movie-form .form-control {
+    color: var(--dark-purple) !important;
+  }
+  #add-movie-form .form-control::placeholder,
+  #edit-movie-form .form-control::placeholder {
+    color: var(--light-grey) !important;
+  }
+  
+  /* ======================================
+     Form Submit Buttons (Add & Edit)
+     ====================================== */
+  .submit-btn-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 10px;
+  }
+  .submit-btn {
+    color: white;
+    border: 2px solid white;
+    background-color: transparent;
+    padding: 5px 10px;
+    font-size: 1rem;
+    transition: background-color 0.3s, color 0.3s;
+    margin-right: 15px;
+    margin-bottom: 10px;
+    width: 150px;
+  }
+  .submit-btn:hover {
+    transform: scale(1.05);
+    background-color: var(--accent-color);
+  }
+  

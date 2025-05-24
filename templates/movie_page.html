@@ -1,0 +1,181 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <h1 class="text-center my-4">{{ movie.title }}</h1>
+
+    <div class="row">
+        <!-- Movie Poster -->
+        <div class="col-md-4">
+            <img src="{{ movie.image }}" class="img-fluid" alt="{{ movie.title }} movie poster">
+        </div>
+        <!-- Movie Details and Review Form -->
+        <div class="col-md-8">
+            <h3>Description</h3>
+            <div class="subtext">
+                <p>{{ movie.description }}</p>
+              </div>
+            
+            <h3>Other Information</h3>
+            <div class="subtext">
+                <ul>
+                    <li><strong>Year:</strong> {{ movie.year }}</li>
+                    <li><strong>Director:</strong> {{ movie.director }}</li>
+                    <li><strong>Starring:</strong> {{ movie.stars | join(", ") }}</li>
+                    <li><strong>Length:</strong> {{ movie.length }} minutes</li>
+                </ul>
+              </div>
+
+            <!-- Review Submission Form -->
+            <div class="mt-4 p-3 border rounded">
+                <h3>Rate this Movie</h3>
+                <form id="review-form">
+                    <div class="mb-3">
+                        <label for="reviewer-name" class="form-label">Your Name:</label>
+                        <input type="text" class="form-control" id="reviewer-name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="rating" class="form-label">Rating:</label>
+                        <select id="rating" class="form-select" required>
+                            <option value="" disabled selected>Select rating</option>
+                            <option value="1">1 Star</option>
+                            <option value="2">2 Stars</option>
+                            <option value="3">3 Stars</option>
+                            <option value="4">4 Stars</option>
+                            <option value="5">5 Stars</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Submit Rating</button>
+                </form>
+
+                <!-- Success Message -->
+                <div id="review-success-message" class="alert alert-success mt-3" style="display:none;">
+                    New review successfully created. <a href="#" id="see-item-link">See it here</a>
+                </div>
+            </div>
+
+            <!-- Display Reviews Section -->
+            <div class="my-4">
+                <h3>User Ratings</h3>
+                <div id="reviews-container">
+                    {% if movie.reviews and movie.reviews|length > 0 %}
+                        <ul id="reviews-list" class="list-group">
+                        {% for review in movie.reviews %}
+                            <li class="list-group-item">
+                                <strong>{{ review.reviewer }}</strong>:  
+                                {% for i in range(review.rating) %}
+                                    <span>&#9733;</span>
+                                {% endfor %}
+                                {% for i in range(5 - review.rating) %}
+                                    <span>&#9734;</span>
+                                {% endfor %}
+                            </li>
+                        {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p id="no-reviews">No ratings yet. Be the first to rate this movie!</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="text-align: center;">
+        <a href="/edit_movie/{{ movie.id }}" class="btn btn-link p-0 edit-link" style="font-size: 0.8rem;">Edit Movie Page</a>
+    </div>
+
+    <script>
+        // Helper function to generate star icons based on rating
+        function renderStars(rating) {
+            let starsHtml = '';
+            for (let i = 0; i < rating; i++) {
+                starsHtml += '&#9733;'; // filled star
+            }
+            for (let i = rating; i < 5; i++) {
+                starsHtml += '&#9734;'; // empty star
+            }
+            return starsHtml;
+        }
+
+        document.getElementById('review-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const reviewerInput = document.getElementById('reviewer-name');
+            const ratingSelect = document.getElementById('rating');
+            const reviewer = reviewerInput.value.trim();
+            const rating = ratingSelect.value;
+            
+            // Prepare the data to send via Ajax
+            const postData = {
+                reviewer: reviewer,
+                rating: rating
+            };
+            
+            try {
+                const response = await fetch('/add_review/{{ movie.id }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(postData)
+                });
+                const result = await response.json();
+                if (response.ok) {
+                    // Create and append the new review item
+                    let reviewsContainer = document.getElementById('reviews-container');
+                    let reviewsList = document.getElementById('reviews-list');
+
+                    if (!reviewsList) {
+                        const noReviews = document.getElementById('no-reviews');
+                        if (noReviews) {
+                            noReviews.remove();
+                        }
+                        reviewsList = document.createElement('ul');
+                        reviewsList.id = 'reviews-list';
+                        reviewsList.className = 'list-group';
+                        reviewsContainer.appendChild(reviewsList);
+                    }
+
+                    // Generate a unique ID for the new review
+                    const reviewId = 'review-' + Date.now();
+                    const newReviewItem = document.createElement('li');
+                    newReviewItem.className = 'list-group-item';
+                    newReviewItem.id = reviewId;
+                    newReviewItem.innerHTML = `<strong>${reviewer}</strong>: ${renderStars(Number(rating))}`;
+                    reviewsList.appendChild(newReviewItem);
+
+                    // Update the "See it here" link to point to the new review
+                    const seeItemLink = document.getElementById('see-item-link');
+                    seeItemLink.href = `#${reviewId}`;
+                    seeItemLink.onclick = function(event) {
+                        event.preventDefault();
+                        const newReview = document.getElementById(reviewId);
+                        
+                        if (newReview) {
+                            newReview.scrollIntoView({ behavior: 'smooth' });
+
+                            // Add highlight effect
+                            newReview.classList.add('highlight-review');
+                            
+                            // Remove highlight after 2 seconds
+                            setTimeout(() => {
+                                newReview.classList.remove('highlight-review');
+                            }, 1000);
+                        }
+                    };
+
+                    // Show the success message
+                    const successMessage = document.getElementById('review-success-message');
+                    successMessage.style.display = 'block';
+
+                    // Clear the form
+                    reviewerInput.value = '';
+                    ratingSelect.value = '';
+                    reviewerInput.focus();
+                } else {
+                    alert('Error: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Error submitting review:', error);
+            }
+        });
+
+    </script>
+{% endblock %}
